@@ -1,0 +1,13 @@
+a chart of what collides with what
+
+			item	bomb	player		enemy		bullet		pbullet
+	item		0		0		1			0			0			0
+	bomb		0		0		0			1			1			0
+	player		1		0		0			1			1			0			
+	enemy		0		1		1			0			0			1			
+	bullet		0		1		1			0			0			0		
+	pbullet		0		0		0			1			0			0			
+	
+	
+	Thing is, collisions seem to be asymmetric.
+	Nothing collides with objects of the same type, so that might explain category v mask.

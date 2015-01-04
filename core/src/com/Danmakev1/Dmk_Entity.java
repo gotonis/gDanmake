@@ -61,5 +61,8 @@ public abstract class Dmk_Entity {
 
 	// Gives the object's shape in the constructor
 	public abstract Shape shapify();
+	
+	//Set of functions to handle collisions
+	public abstract void collideWith(Dmk_Entity e);
 
 }

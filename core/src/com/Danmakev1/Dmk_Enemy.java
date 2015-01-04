@@ -17,4 +17,10 @@ public class Dmk_Enemy extends Dmk_Entity {
 		return null;
 	}
 
+	@Override
+	public void collideWith(Dmk_Entity e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

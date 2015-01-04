@@ -41,4 +41,16 @@ public class Dmk_Bullet extends Dmk_Entity {
 		return shape;
 	}
 
+	@Override
+	public void collideWith(Dmk_Entity e){
+		if(e instanceof Dmk_Player){
+			//System.out.println("Cast necessary");
+			collideWith((Dmk_Player)e);
+		}
+	}
+	
+	public void collideWith(Dmk_Player p){
+		//System.out.println("Hit a player");
+	}
+	
 }

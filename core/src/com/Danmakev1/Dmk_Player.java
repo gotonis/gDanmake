@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Dmk_Player extends Dmk_Entity {
 	static short category = 0x8;
 	static short mask = 0x26;  //item || enemy || bullet
+	static float radius = 3; //Hitbox radius. Subclasses can change it.
 	Dmk_Player(World w, float x, float y, SpriteBatch b,
 			Collection<Dmk_Entity> ents) {
 		super(w, x, y, b, ents,category, mask);
@@ -27,6 +28,9 @@ public class Dmk_Player extends Dmk_Entity {
 		sprites.add(s2);
 		dead = false;
 		fixture.setSensor(false);
+		
+		//TODO: set up graze hitbox (low priority)
+		
 	}
 
 	Texture img;
@@ -82,7 +86,7 @@ public class Dmk_Player extends Dmk_Entity {
 	@Override
 	public Shape shapify() {
 		CircleShape shap = new CircleShape();
-		shap.setRadius(3);
+		shap.setRadius(radius);
 		return shap;
 	}
 
@@ -91,4 +95,16 @@ public class Dmk_Player extends Dmk_Entity {
 		dead = true;
 	}
 
+	@Override
+	public void collideWith(Dmk_Entity e){
+		if(e instanceof Dmk_Bullet){
+			//System.out.println("casting was necessary");
+			collideWith((Dmk_Bullet)e);
+		}
+	}
+	
+	public void collideWith(Dmk_Bullet b){
+		die();
+	}
+	
 }

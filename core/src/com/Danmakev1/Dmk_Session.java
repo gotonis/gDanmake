@@ -62,19 +62,8 @@ public class Dmk_Session extends ApplicationAdapter {
 			@Override
 			// Huh, I didn't know about this syntax. It's kinda weird.
 			public void beginContact(Contact contact) {
-				if ((contact.getFixtureA().getFilterData().categoryBits == 0x2)
-						&& (contact.getFixtureB().getFilterData().categoryBits == 0x8)) {
-					((Dmk_Player) contact.getFixtureB().getUserData()).die();
-					System.out.println("bullet collided with player");
-				}
-				else if ((contact.getFixtureB().getFilterData().categoryBits == 0x2)
-						&& (contact.getFixtureA().getFilterData().categoryBits == 0x8)) {
-					((Dmk_Player) contact.getFixtureA().getUserData()).die();
-					System.out.println("player collided with bullet");
-				}
-				else{
-					System.out.println("Some other collision occurred");
-				}
+				((Dmk_Entity) contact.getFixtureA().getUserData()).collideWith((Dmk_Entity) contact.getFixtureB().getUserData());
+				((Dmk_Entity) contact.getFixtureB().getUserData()).collideWith((Dmk_Entity) contact.getFixtureA().getUserData());
 			}
 
 			@Override

@@ -1,24 +1,26 @@
 package com.Danmakev1;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
+import java.util.Vector;
 
 public class Dmk_Player extends Dmk_Entity {
 	static short category = 0x8;
 	static short mask = 0x26;  //item || enemy || bullet
 	static float radius = 3; //Hitbox radius. Subclasses can change it.
-	Dmk_Player(World w, float x, float y, SpriteBatch b,
-			Collection<Dmk_Entity> ents) {
-		super(w, x, y, b, ents,category, mask);
+	static float initX = 100;
+	static float initY = 100;
+	static int fireRate = 10;
+	static int fTimerID = 0;
+	static int nClocks = 64;
+	Dmk_Player(Dmk_Session session) {
+		super(initX, initY, category, mask, session);
 		sprites = new ArrayList<Sprite>();
 		Sprite s1,s2;
 		img = new Texture("Sprites/PCs.png");
@@ -28,6 +30,8 @@ public class Dmk_Player extends Dmk_Entity {
 		sprites.add(s2);
 		dead = false;
 		fixture.setSensor(false);
+		clocks = new Vector<Float>(64);
+		deaths = 0;
 		
 		//TODO: set up graze hitbox (low priority)
 		
@@ -35,7 +39,8 @@ public class Dmk_Player extends Dmk_Entity {
 
 	Texture img;
 	Boolean dead;
-
+	int deaths;
+	
 	@Override
 	public void render() {
 		sprites.get(0).setPosition(posX, posY);
@@ -80,6 +85,10 @@ public class Dmk_Player extends Dmk_Entity {
 			vx = 0;
 			vy = 0;
 		}
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.Z)){
+			fire();
+		}
 		super.update();
 	}
 
@@ -105,6 +114,23 @@ public class Dmk_Player extends Dmk_Entity {
 	
 	public void collideWith(Dmk_Bullet b){
 		die();
+	}
+	
+	@Override
+	public float getAngleToPlayer(){
+		return 0;
+	}
+	
+	public void fire(){
+		try{
+			waitF(fireRate, fTimerID);
+			}
+		catch(WaitException e) {
+			return;
+		}
+		//Just for debug
+		//dead = !dead;
+		
 	}
 	
 }

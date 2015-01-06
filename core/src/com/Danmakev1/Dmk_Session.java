@@ -1,6 +1,6 @@
 package com.Danmakev1;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -22,7 +22,9 @@ public class Dmk_Session extends ApplicationAdapter {
 	World world;
 	DScript script;
 	ArrayList<Dmk_Entity> entities;
-
+	Dmk_Player player;
+	ScoreBox score;
+	
 	@Override
 	public void create() {
 		// Initialize the sprite for the sole entity
@@ -31,14 +33,17 @@ public class Dmk_Session extends ApplicationAdapter {
 		sprite = new Sprite(img);
 		// Initialize the World
 		world = new World(new Vector2(0, 0), true); // no gravity
+		//Note: 2hu is generally 640x480. The game itself is in the window {(32,16),(415,463)}
+		//Standard game window has a 6x7 
 		float x;
 		float y;
+		
 		x = Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2;
 		y = Gdx.graphics.getHeight() / 2;
 		entities = new ArrayList<Dmk_Entity>();
-		entities.add(new Dmk_Bullet(world, x, y, batch, entities));
-		entities.add(new Dmk_Player(world, 50, 50, batch, entities));
-
+		entities.add(new Dmk_Bullet(x, y, this));
+		player = new Dmk_Player(this);
+		
 	}
 
 	@Override
@@ -47,6 +52,7 @@ public class Dmk_Session extends ApplicationAdapter {
 		for (Dmk_Entity e : entities) {
 			e.update();
 		}
+		player.update();
 		world.step(1f / 60f, 6, 2);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -54,6 +60,7 @@ public class Dmk_Session extends ApplicationAdapter {
 		for (Dmk_Entity e : entities) {
 			e.render();
 		}
+		player.render();
 		batch.end();
 
 		// Contact Listener: Determines what happens for all collisions

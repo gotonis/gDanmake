@@ -1,22 +1,19 @@
 package com.Danmakev1;
 
 import java.util.ArrayList;
-import java.util.Collection;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
 
 public class Dmk_Bullet extends Dmk_Entity {
 	
 	static short category = 0x2;
 	static short mask = 0x18; //bomb || player
 	
-	Dmk_Bullet(World w, float x, float y, SpriteBatch b, Collection<Dmk_Entity> ents){
-		super(w,x,y,b,ents, category, mask);
+	Dmk_Bullet(float x, float y, Dmk_Session session){
+		super(x,y,category,mask,session);
 		sprites = new ArrayList<Sprite>();
 		Sprite s;
 		Texture img;

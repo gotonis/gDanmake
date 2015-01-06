@@ -2,7 +2,9 @@ package com.Danmakev1;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Vector;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -10,12 +12,11 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class Dmk_Entity {
 	static short category = 0x1;
 	static short mask = -1;
-	Dmk_Entity(World w, float x, float y, SpriteBatch b, Collection<Dmk_Entity> ents, short category, short mask) {
+	Dmk_Entity(float x, float y, short category, short mask, Dmk_Session session) {
 		posX = x;
 		posY = y;
 
@@ -23,7 +24,7 @@ public abstract class Dmk_Entity {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.type = BodyDef.BodyType.DynamicBody;
 		bodyDef.position.set(x, y);
-		body = w.createBody(bodyDef);
+		body = session.world.createBody(bodyDef);
 		FixtureDef fixtureDef = new FixtureDef();
 		Shape shape = shapify();
 		fixtureDef.shape = shape;
@@ -34,10 +35,12 @@ public abstract class Dmk_Entity {
 		fixture.setUserData(this);
 		fixture.setSensor(true);
 		shape.dispose();
-		batch = b;       //Allows drawing to be done entity-side
-		entities = ents; //Allows creation of new entities
+		batch = session.batch;       //Allows drawing to be done entity-side
+		entities = session.entities; //Allows creation of new entities
+		score = session.score;
 		vx = 0;
 		vy = 0;
+		clocks = new Vector<Float>();
 	}
 	
 	ArrayList<Sprite> sprites;
@@ -50,6 +53,8 @@ public abstract class Dmk_Entity {
 	Shape shape;
 	SpriteBatch batch;
 	Collection<Dmk_Entity> entities;
+	ScoreBox score;
+	Vector<Float> clocks;
 
 	public abstract void render();
 
@@ -64,5 +69,44 @@ public abstract class Dmk_Entity {
 	
 	//Set of functions to handle collisions
 	public abstract void collideWith(Dmk_Entity e);
-
+	
+	public float getAngleToPlayer(){
+		return score.getAngleToPlayer(posX, posY);
+	}
+	
+	//Wait a certain number of frames before doing whatever
+	//Put this in something that repeats every frame and be careful to catch the exception
+	public void waitF(int nFrames, int waitID) throws WaitException{
+		if(clocks.size() <= waitID){
+			clocks.ensureCapacity(waitID);
+			clocks.add(waitID, (float)nFrames);
+			throw new WaitException();
+		}
+		else if(clocks.get(waitID) == null){
+			clocks.set(waitID, (float)nFrames);
+			throw new WaitException();
+		}
+		else if(clocks.get(waitID) > 0){
+			clocks.set(waitID, clocks.get(waitID) - 1);
+			throw new WaitException();
+		}
+		else {
+			clocks.set(waitID, null);
+		}
+	}
+	
+	//Same as waitF, but measures time in seconds rather than frames
+	public void waitR(float time, int waitID) throws WaitException{
+	if(clocks.size() <= waitID || clocks.get(waitID) == null){
+		clocks.set(waitID, time);
+		throw new WaitException();
+	}
+	else if(clocks.get(waitID) > 0){
+		clocks.set(waitID, clocks.get(waitID) - Gdx.graphics.getDeltaTime());
+		throw new WaitException();
+	}
+	else {
+		clocks.set(waitID, null);
+	}
+}
 }

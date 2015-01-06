@@ -22,5 +22,8 @@ public class Dmk_Enemy extends Dmk_Entity {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	//TODO set up bullet spawning; This will have to wait until I've got bullet data storage
+	
 
 }

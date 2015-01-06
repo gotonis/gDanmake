@@ -1,6 +1,6 @@
 package com.Danmakev1;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -41,8 +41,14 @@ public class Dmk_Session extends ApplicationAdapter {
 		x = Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2;
 		y = Gdx.graphics.getHeight() / 2;
 		entities = new ArrayList<Dmk_Entity>();
-		entities.add(new Dmk_Bullet(x, y, this));
+		//entities.add(new Dmk_Bullet(x, y, this));
 		player = new Dmk_Player(this);
+		
+		BulletSpawner spawner = new BulletSpawner("bulletData.dat", this);
+		for(int i = 1; i <= 8; i++){
+			entities.add(spawner.spawnBullet(40 * i, 40, "Large", i));
+		}
+		
 		
 	}
 

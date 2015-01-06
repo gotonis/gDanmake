@@ -43,6 +43,34 @@ public abstract class Dmk_Entity {
 		clocks = new Vector<Float>();
 	}
 	
+	//For loading from data
+	Dmk_Entity(float x, float y, short category, short mask, Dmk_Session session, Shape shape){
+		posX = x;
+		posY = y;
+
+		// Body definition
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.type = BodyDef.BodyType.DynamicBody;
+		bodyDef.position.set(x, y);
+		body = session.world.createBody(bodyDef);
+		FixtureDef fixtureDef = new FixtureDef();
+		fixtureDef.shape = shape;
+		fixtureDef.density = 1f; // default density
+		fixtureDef.filter.categoryBits = category;
+		fixtureDef.filter.maskBits = mask;
+		fixture = body.createFixture(fixtureDef);
+		fixture.setUserData(this);
+		fixture.setSensor(true);
+		shape.dispose();
+		batch = session.batch;       //Allows drawing to be done entity-side
+		entities = session.entities; //Allows creation of new entities
+		score = session.score;
+		vx = 0;
+		vy = 0;
+		clocks = new Vector<Float>();
+	}
+	
+	
 	ArrayList<Sprite> sprites;
 	Body body;
 	float posX;

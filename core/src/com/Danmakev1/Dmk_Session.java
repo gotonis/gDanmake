@@ -48,6 +48,24 @@ public class Dmk_Session extends ApplicationAdapter {
 		for(int i = 1; i <= 8; i++){
 			entities.add(spawner.spawnBullet(40 * i, 40, "Large", i));
 		}
+		Path p = new Path();
+		p.types.add(Ptype.WAIT);
+		p.waits.add(60);
+		p.types.add(Ptype.LINVEL);
+		Float f[] = new Float[2];
+		f[0] = (float) 5;
+		f[1] = (float) 10;
+		p.deltas.add(f);
+		p.types.add(Ptype.WAIT);
+		p.waits.add(120);
+		p.types.add(Ptype.LINACC);
+		Float f2[] = new Float[4];
+		f2[0] = (float) 50;
+		f2[1] = (float) 0;
+		f2[2] = (float) -20;
+		f2[3] = (float) 10;
+		p.deltas.add(f2);
+		((Dmk_Bullet)entities.get(0)).pcat(p);
 		
 		
 	}

@@ -21,10 +21,11 @@ public class Dmk_Session extends ApplicationAdapter {
 	Texture img;
 	World world;
 	DScript script;
-	ArrayList<Dmk_Entity> entities;
+	ArrayList<Dmk_Enemy> enemies;
+	ArrayList<Dmk_Bullet> bullets;
 	Dmk_Player player;
 	ScoreBox score;
-	
+
 	@Override
 	public void create() {
 		// Initialize the sprite for the sole entity
@@ -33,20 +34,17 @@ public class Dmk_Session extends ApplicationAdapter {
 		sprite = new Sprite(img);
 		// Initialize the World
 		world = new World(new Vector2(0, 0), true); // no gravity
-		//Note: 2hu is generally 640x480. The game itself is in the window {(32,16),(415,463)}
-		//Standard game window has a 6x7 
-		float x;
-		float y;
-		
-		x = Gdx.graphics.getWidth() / 2 - sprite.getWidth() / 2;
-		y = Gdx.graphics.getHeight() / 2;
-		entities = new ArrayList<Dmk_Entity>();
-		//entities.add(new Dmk_Bullet(x, y, this));
+		// Note: 2hu is generally 640x480. The game itself is in the window
+		// {(32,16),(415,463)}
+		// Standard game window has a 6x7
+
+		bullets = new ArrayList<Dmk_Bullet>();
+		//bullets.add(new Dmk_Bullet(x, y, this));
 		player = new Dmk_Player(this);
-		
+
 		BulletSpawner spawner = new BulletSpawner("bulletData.dat", this);
-		for(int i = 1; i <= 8; i++){
-			entities.add(spawner.spawnBullet(40 * i, 40, "Large", i));
+		for (int i = 1; i <= 8; i++) {
+			bullets.add(spawner.spawnBullet(40 * i, 40, "Large", i));
 		}
 		Path p = new Path();
 		p.types.add(Ptype.WAIT);
@@ -65,24 +63,23 @@ public class Dmk_Session extends ApplicationAdapter {
 		f2[2] = (float) -20;
 		f2[3] = (float) 10;
 		p.deltas.add(f2);
-		((Dmk_Bullet)entities.get(0)).pcat(p);
-		
-		
+		((Dmk_Bullet) bullets.get(0)).pcat(p);
+
 	}
 
 	@Override
 	public void render() {
 
-		for (Dmk_Entity e : entities) {
-			e.update();
+		for (Dmk_Entity b : bullets) {
+			b.update();
 		}
 		player.update();
 		world.step(1f / 60f, 6, 2);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
-		for (Dmk_Entity e : entities) {
-			e.render();
+		for (Dmk_Entity b : bullets) {
+			b.render();
 		}
 		player.render();
 		batch.end();
@@ -93,8 +90,12 @@ public class Dmk_Session extends ApplicationAdapter {
 			@Override
 			// Huh, I didn't know about this syntax. It's kinda weird.
 			public void beginContact(Contact contact) {
-				((Dmk_Entity) contact.getFixtureA().getUserData()).collideWith((Dmk_Entity) contact.getFixtureB().getUserData());
-				((Dmk_Entity) contact.getFixtureB().getUserData()).collideWith((Dmk_Entity) contact.getFixtureA().getUserData());
+				((Dmk_Entity) contact.getFixtureA().getUserData())
+						.collideWith((Dmk_Entity) contact.getFixtureB()
+								.getUserData());
+				((Dmk_Entity) contact.getFixtureB().getUserData())
+						.collideWith((Dmk_Entity) contact.getFixtureA()
+								.getUserData());
 			}
 
 			@Override
@@ -111,5 +112,19 @@ public class Dmk_Session extends ApplicationAdapter {
 
 		});
 
+	}
+	
+	public Dmk_Enemy getClosestEnemy(){
+		double dist = 9999999;
+		Dmk_Enemy temp = null;
+		double calc;
+		for(Dmk_Enemy e: enemies){
+			calc = Math.sqrt((player.posX - e.posX)*(player.posX - e.posX) + (player.posY - e.posY)*(player.posY - e.posY));
+			if(calc < dist){
+				dist = calc;
+				temp = e;
+			}
+		}
+		return temp;
 	}
 }

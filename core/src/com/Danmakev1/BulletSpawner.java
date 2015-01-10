@@ -22,7 +22,7 @@ public class BulletSpawner {
 	Dmk_Session session;
 
 	// color: ROYGCBVW <-> 1-8
-	Dmk_Bullet spawnBullet(int x, int y, String ID, int color) {
+	Dmk_Bullet spawnBullet(float x, float y, String ID, int color) {
 		
 		
 		FileReader r;
@@ -55,6 +55,7 @@ public class BulletSpawner {
 			} 
 			else {
 				shape = null;
+				reader.close();
 				return null;
 			}
 

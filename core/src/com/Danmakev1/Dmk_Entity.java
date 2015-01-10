@@ -107,7 +107,7 @@ public abstract class Dmk_Entity {
 	public void waitF(int nFrames, int waitID) throws WaitException{
 		if(clocks.size() <= waitID){
 			clocks.ensureCapacity(waitID);
-			clocks.add(waitID, (float)nFrames);
+			clocks.add(waitID, (float) nFrames);
 			throw new WaitException();
 		}
 		else if(clocks.get(waitID) == null){
@@ -137,4 +137,6 @@ public abstract class Dmk_Entity {
 		clocks.set(waitID, null);
 	}
 }
+	
+	
 }

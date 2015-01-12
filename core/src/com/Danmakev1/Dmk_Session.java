@@ -25,6 +25,7 @@ public class Dmk_Session extends ApplicationAdapter {
 	ArrayList<Dmk_Bullet> bullets;
 	Dmk_Player player;
 	ScoreBox score;
+	BulletSpawner spawner;
 
 	@Override
 	public void create() {
@@ -41,10 +42,16 @@ public class Dmk_Session extends ApplicationAdapter {
 		bullets = new ArrayList<Dmk_Bullet>();
 		//bullets.add(new Dmk_Bullet(x, y, this));
 		player = new Dmk_Player(this);
-
-		BulletSpawner spawner = new BulletSpawner("bulletData.dat", this);
-		for (int i = 1; i <= 8; i++) {
-			bullets.add(spawner.spawnBullet(40 * i, 40, "Large", i));
+		spawner = new BulletSpawner("../core/assets/bulletData.dat", this);
+		bullets.add(spawner.spawnBullet(40,40,"Snow",1));
+		Dmk_Enemy boss = new Dmk_Enemy(300,350,this);
+		enemies = new ArrayList<Dmk_Enemy>();
+		enemies.add(boss);
+		
+		
+		//Original bullet tests
+		/*for (int i = 1; i <= 8; i++) {
+			bullets.add(spawner.spawnBullet(40 * i, 40, "Snow", i));
 		}
 		Path p = new Path();
 		p.types.add(Ptype.WAIT);
@@ -64,6 +71,7 @@ public class Dmk_Session extends ApplicationAdapter {
 		f2[3] = (float) 10;
 		p.deltas.add(f2);
 		((Dmk_Bullet) bullets.get(0)).pcat(p);
+		*/
 
 	}
 
@@ -73,12 +81,18 @@ public class Dmk_Session extends ApplicationAdapter {
 		for (Dmk_Entity b : bullets) {
 			b.update();
 		}
+		for (Dmk_Entity b : enemies) {
+			b.update();
+		}
 		player.update();
 		world.step(1f / 60f, 6, 2);
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.begin();
 		for (Dmk_Entity b : bullets) {
+			b.render();
+		}
+		for (Dmk_Entity b: enemies) {
 			b.render();
 		}
 		player.render();
@@ -126,5 +140,13 @@ public class Dmk_Session extends ApplicationAdapter {
 			}
 		}
 		return temp;
+	}
+	
+	public Dmk_Bullet getBullet(int id){
+		for(Dmk_Bullet b: bullets){
+			if(b.getID() == id)
+				return b;
+		}
+		return null;
 	}
 }

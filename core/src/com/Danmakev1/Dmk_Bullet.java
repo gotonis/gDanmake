@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 
@@ -15,7 +14,7 @@ public class Dmk_Bullet extends Dmk_Entity {
 	static int pathNum = 0;
 
 	// raw
-	Dmk_Bullet(float x, float y, Dmk_Session session) {
+	Dmk_Bullet(float x, float y, Dmk_Session session, int id) {
 		super(x, y, category, mask, session);
 		sprites = new ArrayList<Sprite>();
 		Sprite s;
@@ -28,10 +27,11 @@ public class Dmk_Bullet extends Dmk_Entity {
 		ax = 0;
 		ay = 0;
 		path = new Path();
+		ID = id;
 	}
 
 	// From data
-	Dmk_Bullet(float x, float y, Dmk_Session session, Sprite spr, Shape s) {
+	Dmk_Bullet(float x, float y, Dmk_Session session, Sprite spr, Shape s, int id) {
 
 		super(x, y, category, mask, session, s);
 		sprites = new ArrayList<Sprite>();
@@ -41,6 +41,7 @@ public class Dmk_Bullet extends Dmk_Entity {
 		ax = 0;
 		ay = 0;
 		path = new Path();
+		ID = id;
 	}
 
 	// For use in reading bullets from file
@@ -51,9 +52,11 @@ public class Dmk_Bullet extends Dmk_Entity {
 	float ax;
 	float ay;
 	public Path path;
+	protected int ID;
 
 	@Override
 	public void render() {
+		//System.out.println("Rendering " + ID);
 		sprites.get(0).setPosition(posX, posY);
 		batch.draw(sprites.get(0), posX, posY);
 	}
@@ -105,6 +108,10 @@ public class Dmk_Bullet extends Dmk_Entity {
 
 	public void pcat(Path p) {
 		path.concatenate(p, 0);
+	}
+	
+	public int getID(){
+		return ID;
 	}
 
 }

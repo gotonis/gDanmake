@@ -36,11 +36,12 @@ public abstract class Dmk_Entity {
 		fixture.setSensor(true);
 		shape.dispose();
 		batch = session.batch;       //Allows drawing to be done entity-side
-		entities = session.entities; //Allows creation of new entities
+		enemies = session.enemies; //Allows creation of new entities
 		score = session.score;
 		vx = 0;
 		vy = 0;
 		clocks = new Vector<Float>();
+		this.session = session;
 	}
 	
 	//For loading from data
@@ -63,11 +64,13 @@ public abstract class Dmk_Entity {
 		fixture.setSensor(true);
 		shape.dispose();
 		batch = session.batch;       //Allows drawing to be done entity-side
-		entities = session.entities; //Allows creation of new entities
+		enemies = session.enemies; //Allows creation of new enemies
+		bullets = session.bullets;
 		score = session.score;
 		vx = 0;
 		vy = 0;
 		clocks = new Vector<Float>();
+		this.session = session;
 	}
 	
 	
@@ -80,9 +83,11 @@ public abstract class Dmk_Entity {
 	float vy;
 	Shape shape;
 	SpriteBatch batch;
-	Collection<Dmk_Entity> entities;
+	Collection<Dmk_Enemy> enemies;
+	Collection<Dmk_Bullet> bullets;
 	ScoreBox score;
 	Vector<Float> clocks;
+	Dmk_Session session;
 
 	public abstract void render();
 

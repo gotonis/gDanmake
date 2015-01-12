@@ -14,7 +14,7 @@ public class Dmk_Player extends Dmk_Entity {
 	static short category = 0x8;
 	static short mask = 0x26;  //item || enemy || bullet
 	static float radius = 3; //Hitbox radius. Subclasses can change it.
-	static float initX = 100;
+	static float initX = 300;
 	static float initY = 100;
 	static int fireRate = 10;
 	static int fTimerID = 0;
@@ -32,6 +32,8 @@ public class Dmk_Player extends Dmk_Entity {
 		fixture.setSensor(false);
 		clocks = new Vector<Float>(64);
 		deaths = 0;
+		Texture hbs = new Texture("Sprites/shot_all.png");
+		hbSprite = new Sprite(hbs,37,1,9,10);
 		
 		//TODO: set up graze hitbox (low priority)
 		
@@ -40,15 +42,19 @@ public class Dmk_Player extends Dmk_Entity {
 	Texture img;
 	Boolean dead;
 	int deaths;
+	Sprite hbSprite;
 	
 	@Override
 	public void render() {
+		hbSprite.setPosition(posX, posY);
 		sprites.get(0).setPosition(posX, posY);
+		
 		if (dead) {
-			batch.draw(sprites.get(1), posX, posY);
+			batch.draw(sprites.get(1), posX-8, posY-17);
 		} else {
-			batch.draw(sprites.get(0), posX, posY);
+			batch.draw(sprites.get(0), posX-11, posY-17);
 		}
+		batch.draw(hbSprite, posX, posY);
 	}
 
 	@Override
